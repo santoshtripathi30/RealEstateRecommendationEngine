@@ -25,8 +25,8 @@ namespace RealEstateRecommendationEngine.Services
         private static DataViewSchema? _modelInputSchema;
         private IDataView? _trainingData;
         private static Lazy<ITransformer>? _lazyModel;
-
-        public AIPipelineServices(IConfiguration configuration, ILogger<AIPipelineServices> logger)
+        private readonly IFileHelper _fileHelper;
+        public AIPipelineServices(IConfiguration configuration, ILogger<AIPipelineServices> logger, IFileHelper fileHelper)
         {
             _connectionString = configuration.GetConnectionString(ConfigurationKeys.DefaultConnection)
                 ?? throw new ArgumentNullException("Connection string not found.");
@@ -35,6 +35,7 @@ namespace RealEstateRecommendationEngine.Services
             _logger = logger;
 
             _lazyModel = new Lazy<ITransformer>(LoadModel, isThreadSafe: true);
+            _fileHelper = fileHelper;
         }
 
         public void CreateModelZipFile()
@@ -65,7 +66,7 @@ namespace RealEstateRecommendationEngine.Services
             var fullModel = transformer.Append(trainedModel);
 
             var fileName = $"model_{DateTime.UtcNow:yyyyMMdd_HHmmss}.zip";
-            var modelPath = Path.Combine(FileHelper.GetDataFileDirectory(), fileName);
+            var modelPath = Path.Combine(_fileHelper.GetDataFileDirectory(), fileName);
 
             _mlContext.Model.Save(fullModel, _trainingData.Schema, modelPath);
 
@@ -74,7 +75,7 @@ namespace RealEstateRecommendationEngine.Services
 
         public ITransformer LoadModel()
         {
-            var modelDirectory = FileHelper.GetDataFileDirectory();
+            var modelDirectory = _fileHelper.GetDataFileDirectory();
 
             var latestModelFile = Directory.GetFiles(modelDirectory, "model_*.zip")
                 .OrderByDescending(f => f)

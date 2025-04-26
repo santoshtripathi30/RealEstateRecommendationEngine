@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 
+using RealEstateRecommendationEngine.Infrastructure;
 using RealEstateRecommendationEngine.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,7 @@ void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IAIPipelineServices, AIPipelineServices>();
     services.AddSingleton<IPropertyServices, PropertyServices>();
     services.AddSingleton<IRecommendationService, RecommendationService>();
+    services.AddSingleton<IFileHelper, FileHelper>();
 }
 
 void ConfigureMiddleware(WebApplication app)

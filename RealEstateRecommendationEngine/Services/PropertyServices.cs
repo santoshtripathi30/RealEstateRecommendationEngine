@@ -12,20 +12,31 @@ namespace RealEstateRecommendationEngine.Services
         public void ExportPropertiesToJson();
         public void LoadPropertiesFromJson();
 
-        public List<PropertyInfo> GetAllProperties();
+        public List<RealEstatePropertyInfo> GetAllProperties();
     }
 
-    public class PropertyServices(IConfiguration configuration) : IPropertyServices
+    public class PropertyServices : IPropertyServices
     {
-        private readonly string _connectionString = configuration.GetConnectionString(ConfigurationKeys.DefaultConnection);
-        private List<PropertyInfo> _propertyInfos = [];
-        private readonly string jsonPath = Path.Combine(FileHelper.GetDataFileDirectory(), "properties.json");
+        private readonly string _connectionString = string.Empty;
+        private readonly IFileHelper _fileHelper;
+        private List<RealEstatePropertyInfo> _propertyInfos = [];
+        private readonly string jsonPath;
+
+        public PropertyServices(IConfiguration configuration, IFileHelper fileHelper)
+        {
+            _connectionString = configuration.GetConnectionString(ConfigurationKeys.DefaultConnection);
+            _fileHelper = fileHelper;
+            jsonPath = Path.Combine(_fileHelper.GetDataFileDirectory(), "properties.json");
+        }
+
+
+
         public void ExportPropertiesToJson()
         {
             try
             {
-                List<PropertyInfo> properties = [];
-                PropertyInfo obj;
+                List<RealEstatePropertyInfo> properties = [];
+                RealEstatePropertyInfo obj;
 
                 using (var connection = new SqlConnection(_connectionString))
                 {
@@ -36,7 +47,7 @@ namespace RealEstateRecommendationEngine.Services
                     using var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        obj = new PropertyInfo();
+                        obj = new RealEstatePropertyInfo();
 
                         obj.PropertyID = DBToInt(reader["PropertyID"]);
                         obj.Address = DBToString(reader["Address"]);
@@ -98,10 +109,10 @@ namespace RealEstateRecommendationEngine.Services
                 throw new FileNotFoundException("Property JSON file not found.");
 
             var json = File.ReadAllText(jsonPath);
-            _propertyInfos = JsonSerializer.Deserialize<List<PropertyInfo>>(json);
+            _propertyInfos = JsonSerializer.Deserialize<List<RealEstatePropertyInfo>>(json);
         }
 
-        public List<PropertyInfo> GetAllProperties()
+        public List<RealEstatePropertyInfo> GetAllProperties()
         {
             if (_propertyInfos == null || _propertyInfos.Count==0)
             {

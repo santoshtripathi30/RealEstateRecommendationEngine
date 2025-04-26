@@ -1,10 +1,10 @@
 ﻿namespace RealEstateRecommendationEngine.Infrastructure
 {
-    public static class FileHelper
+    public class FileHelper : IFileHelper
     {
         private const string DataFolderName = "DataFiles";
 
-        public static string GetDataFileDirectory()
+        public string GetDataFileDirectory()
         {
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (string.IsNullOrWhiteSpace(baseDirectory))

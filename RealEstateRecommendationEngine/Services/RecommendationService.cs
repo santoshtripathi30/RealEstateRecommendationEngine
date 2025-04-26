@@ -6,7 +6,7 @@ namespace RealEstateRecommendationEngine.Services
 {
     public interface IRecommendationService
     {
-        public List<PropertyInfo> GetRecommendations(string userId);
+        public List<RealEstatePropertyInfo> GetRecommendations(string userId);
     }
     public class RecommendationService : IRecommendationService
     {
@@ -33,7 +33,7 @@ namespace RealEstateRecommendationEngine.Services
             }, true);
         }
 
-        public List<PropertyInfo> GetRecommendations(string userId)
+        public List<RealEstatePropertyInfo> GetRecommendations(string userId)
         {
             var allProperties = _propertyServices.GetAllProperties();
 

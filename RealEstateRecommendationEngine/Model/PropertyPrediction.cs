@@ -26,7 +26,7 @@ namespace RealEstateRecommendationEngine.Model
         public string UserId { get; set; } = string.Empty;  
         [Required]
         public string PropertyId { get; set; } = string.Empty;
-        [Required] 
+        [Range(0, 5, ErrorMessage = "Rating must be between 0 and 5.")]
         public float Rating { get; set; }
     }
 }

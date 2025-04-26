@@ -1,6 +1,6 @@
 ﻿namespace RealEstateRecommendationEngine.Model
 {
-    public class PropertyInfo
+    public class RealEstatePropertyInfo
     {
         public int PropertyID { get; set; }
         public string Address { get; set; } = string.Empty;
