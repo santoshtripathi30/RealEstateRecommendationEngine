@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+
 using RealEstateRecommendationEngine.Services;
 
-
-namespace RealEstateRecommendationEngine.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class RecommendationController : ControllerBase
+namespace RealEstateRecommendationEngine.Controllers
 {
-    private readonly RecommendationService _service;
-
-    public RecommendationController(RecommendationService service)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RecommendationController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IRecommendationService _recommendationService;
+    
 
-    [HttpGet("{userId}")]
-    public IActionResult GetRecommendations(string userId)
-    {
-        var results = _service.GetRecommendations(userId);
-        return Ok(results);
+        public RecommendationController(IRecommendationService recommendationService)
+        {
+            _recommendationService = recommendationService;
+            
+        }
+
+        // Get recommendations for a user
+        [HttpGet("{userId}")]
+        public IActionResult GetRecommendations(string userId)
+        {
+            var results = _recommendationService.GetRecommendations(userId);
+            if (results == null)
+            {
+                return NotFound("Recommendations not found for this user.");
+            }
+            return Ok(results);
+        }
+
     }
 }

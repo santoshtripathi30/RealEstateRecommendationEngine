@@ -1,15 +1,32 @@
 ﻿using Microsoft.ML.Data;
 
+using System.ComponentModel.DataAnnotations;
+
 namespace RealEstateRecommendationEngine.Model
 {
-    public class PropertyPrediction
+    /// <summary>
+    /// Prediction result for a property recommendation.
+    /// </summary>
+    public class PropertyPredictionWithId
     {
+        [Required]
+        public string PropertyId { get; set; } = string.Empty;
+
         [ColumnName("Score")]
         public float Score { get; set; }
     }
 
-    public class PropertyPredictionWithId
+
+    /// <summary>
+    /// Input model for training and predicting user-property ratings.
+    /// </summary>
+    public class PropertyRating
     {
-        public float Score { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;  
+        [Required]
+        public string PropertyId { get; set; } = string.Empty;
+        [Required] 
+        public float Rating { get; set; }
     }
 }
