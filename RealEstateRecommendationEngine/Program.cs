@@ -45,7 +45,7 @@ void ConfigureMiddleware(WebApplication app)
 {
     var enableSwagger = Environment.GetEnvironmentVariable("ENABLE_SWAGGER") == "true";
 
-    if (app.Environment.IsDevelopment() || enableSwagger)
+   // if (app.Environment.IsDevelopment() || enableSwagger)
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>
